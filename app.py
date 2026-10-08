@@ -288,20 +288,28 @@ def seed_database(require_admin=False):
     db.session.commit()
 
     # Create admin account if password is configured
-    if not AdminUser.query.first():
-        pw = os.environ.get("ADMIN_PASSWORD", "")
+   # Create or update admin account
+pw = os.environ.get("ADMIN_PASSWORD", "")
+username = os.environ.get("ADMIN_USERNAME", "admin")
 
-        if len(pw) >= 10:
-            db.session.add(
-                AdminUser(
-                    username=os.environ.get("ADMIN_USERNAME", "admin"),
-                    password_hash=generate_password_hash(pw)
-                )
+if len(pw) >= 10:
+    admin = AdminUser.query.first()
+
+    if admin:
+        admin.username = username
+        admin.password_hash = generate_password_hash(pw)
+    else:
+        db.session.add(
+            AdminUser(
+                username=username,
+                password_hash=generate_password_hash(pw)
             )
-        elif require_admin:
-            raise SystemExit(
-                "Set ADMIN_PASSWORD (10+ characters) in the environment first."
-            )
+        )
+
+elif require_admin:
+    raise SystemExit(
+        "Set ADMIN_PASSWORD (10+ characters) in the environment first."
+    )
 
     # Create demo products if database is empty
     if not Product.query.first():
