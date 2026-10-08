@@ -257,26 +257,109 @@ def admin_password():
     return redirect(url_for("admin_settings"))
 
 # ---------- setup ----------
+
+def seed_database(require_admin=False):
+    db.create_all()
+
+    # Create categories
+    categories = [
+        "Rajwadi Jewellery",
+        "Rajasthani Jewellery",
+        "Necklace Sets",
+        "Earrings",
+        "Bangles",
+        "Bridal Jewellery",
+        "Traditional Jewellery",
+        "Pendant Sets",
+        "Maang Tikka",
+        "Nath",
+        "Other Collections"
+    ]
+
+    for n in categories:
+        if not Category.query.filter_by(slug=slugify(n)).first():
+            db.session.add(
+                Category(
+                    name=n,
+                    slug=slugify(n)
+                )
+            )
+
+    db.session.commit()
+
+    # Create admin account if password is configured
+    if not AdminUser.query.first():
+        pw = os.environ.get("ADMIN_PASSWORD", "")
+
+        if len(pw) >= 10:
+            db.session.add(
+                AdminUser(
+                    username=os.environ.get("ADMIN_USERNAME", "admin"),
+                    password_hash=generate_password_hash(pw)
+                )
+            )
+        elif require_admin:
+            raise SystemExit(
+                "Set ADMIN_PASSWORD (10+ characters) in the environment first."
+            )
+
+    # Create demo products if database is empty
+    if not Product.query.first():
+
+        g = lambda s: Category.query.filter_by(slug=s).first().id
+
+        demo_products = [
+            (
+                "Rajwadi Necklace Set",
+                "necklace-sets",
+                "Demo item. Replace with your real product."
+            ),
+            (
+                "Rajasthani Kundan Set",
+                "rajasthani-jewellery",
+                "Demo item. Replace with your real product."
+            ),
+            (
+                "Traditional Bridal Set",
+                "bridal-jewellery",
+                "Demo item. Replace with your real product."
+            ),
+            (
+                "Royal Earrings",
+                "earrings",
+                "Demo item. Replace with your real product."
+            )
+        ]
+
+        for i, (name, category, description) in enumerate(
+            demo_products, 1
+        ):
+            db.session.add(
+                Product(
+                    name=name,
+                    sku=f"DEMO-{i:03d}",
+                    category_id=g(category),
+                    description=description,
+                    featured=True,
+                    demo=True
+                )
+            )
+
+    db.session.commit()
+
+    print("Database ready.")
+
+
 @app.cli.command("init-db")
 def init_db():
-    db.create_all()
-    for n in ["Rajwadi Jewellery", "Rajasthani Jewellery", "Necklace Sets", "Earrings", "Bangles", "Bridal Jewellery",
-              "Traditional Jewellery", "Pendant Sets", "Maang Tikka", "Nath", "Other Collections"]:
-        if not Category.query.filter_by(slug=slugify(n)).first(): db.session.add(Category(name=n, slug=slugify(n)))
-    db.session.commit()
-    if not AdminUser.query.first():
-        pw = os.environ.get("ADMIN_PASSWORD")
-        if not pw or len(pw) < 10: raise SystemExit("Set ADMIN_PASSWORD (10+ characters) in the environment first.")
-        db.session.add(AdminUser(username=os.environ.get("ADMIN_USERNAME", "admin"), password_hash=generate_password_hash(pw)))
-    if not Product.query.first():
-        g = lambda s: Category.query.filter_by(slug=s).first().id
-        for i, (n, c, d) in enumerate([("Rajwadi Necklace Set", "necklace-sets", "Demo item. Replace with your real product."),
-            ("Rajasthani Kundan Set", "rajasthani-jewellery", "Demo item. Replace with your real product."),
-            ("Traditional Bridal Set", "bridal-jewellery", "Demo item. Replace with your real product."),
-            ("Royal Earrings", "earrings", "Demo item. Replace with your real product.")], 1):
-            db.session.add(Product(name=n, sku=f"DEMO-{i:03d}", category_id=g(c), description=d, featured=True, demo=True))
-    db.session.commit(); print("Database ready.")
+    seed_database(require_admin=True)
+
+
+# Automatically create database, categories and demo products
+# when the Render website starts.
 with app.app_context():
-  db.create_all()
+    seed_database()
+
+
 if __name__ == "__main__":
-  app.run(debug=True)  
+    app.run(debug=True)
