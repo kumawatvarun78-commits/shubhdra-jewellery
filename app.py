@@ -276,3 +276,7 @@ def init_db():
             ("Royal Earrings", "earrings", "Demo item. Replace with your real product.")], 1):
             db.session.add(Product(name=n, sku=f"DEMO-{i:03d}", category_id=g(c), description=d, featured=True, demo=True))
     db.session.commit(); print("Database ready.")
+    with app.app_context():
+      db.create_all()
+    if __name__ == "__main__":
+      app.run(debug=True)  
