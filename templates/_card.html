@@ -1,0 +1,7 @@
+{% set msg = 'Hello Shubhdra Imitation Jawellary, I am interested in ' ~ p.name ~ ' (Product Code: ' ~ p.sku ~ '). Please share wholesale details.' %}
+<article class="card">
+<a class="ph" href="/product/{{ p.sku }}">{% if p.image %}<img src="{{ img_url(p.image) }}" alt="{{ p.name }}, {{ p.category.name if p.category else 'jewellery' }}" loading="lazy" width="400" height="500">{% else %}<span class="noimg">SI</span>{% endif %}{% if p.demo %}<em class="tag">Demo</em>{% endif %}</a>
+<div class="cb"><p class="cat">{{ p.category.name if p.category else 'Collection' }}</p>
+<h3><a href="/product/{{ p.sku }}">{{ p.name }}</a></h3>
+<p class="sd">{{ (p.description or '')|truncate(70) }}</p><p class="pr">Wholesale Price on Enquiry</p>
+<div class="btns"><a class="b ghost" href="/product/{{ p.sku }}">View Details</a><a class="b wa" href="https://wa.me/{{ s.whatsapp }}?text={{ msg|urlencode }}">Enquire on WhatsApp</a></div></div></article>

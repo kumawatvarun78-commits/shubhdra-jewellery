@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>SI Admin</title><link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"></head><body class="adm"><div class="wrap">
+{% macro T() %}<input type="hidden" name="csrf" value="{{ csrf() }}">{% endmacro %}
+{% for c, m in get_flashed_messages(with_categories=true) %}<p class="fl {{ c }}">{{ m }}</p>{% endfor %}
+{% if page=='login' %}<form method="post" class="form narrow"><h1 class="h2">Admin Login</h1>{{ T() }}<label>Username<input name="username" required></label><label>Password<input name="password" type="password" required></label><button class="b gold">Log in</button></form>
+{% else %}
+<nav class="anav"><a href="/admin/products">Products</a><a href="/admin/categories">Categories</a><a href="/admin/settings">Website</a><a href="/" target="_blank">View site</a>
+<form method="post" action="/admin/logout">{{ T() }}<button class="b ghost">Log out</button></form></nav>
+{% if page=='products' %}<h1 class="h2">Products</h1><a class="b gold" href="/admin/products/new">Add product</a>
+<div class="tbl">{% for p in products %}<div class="row">{% if p.image %}<img src="{{ img_url(p.image) }}" width="56" height="56" alt="">{% else %}<span class="mono">SI</span>{% endif %}
+<div><strong>{{ p.name }}</strong> <small>{{ p.sku }}{{ ' · Featured' if p.featured }}{{ ' · Hidden' if not p.active }}{{ ' · Demo' if p.demo }}</small></div>
+<a class="b ghost" href="/admin/products/{{ p.id }}">Edit</a><form method="post" action="/admin/products/{{ p.id }}/delete" onsubmit="return confirm('Delete this product?')">{{ T() }}<button class="b ghost">Delete</button></form></div>{% else %}<p>No products yet. Add your first product.</p>{% endfor %}</div>
+<h2>Recent enquiries</h2><div class="tbl">{% for e in enquiries %}<div class="row"><div><strong>{{ e.customer_name }}</strong> · <a href="tel:{{ e.phone }}">{{ e.phone }}</a> <small>{{ e.created_at.strftime('%d %b %H:%M') }} · {{ e.product_ref }}</small><br>{{ e.message }}</div></div>{% else %}<p>No enquiries yet.</p>{% endfor %}</div>
+{% elif page=='product_form' %}<h1 class="h2">{{ 'Edit' if p else 'Add' }} product</h1>
+<form method="post" enctype="multipart/form-data" class="form">{{ T() }}
+<label>Name<input name="name" required value="{{ p.name if p }}"></label><label>Product code (SKU)<input name="sku" required value="{{ p.sku if p }}"></label>
+<label>Category<select name="category_id"><option value="">None</option>{% for c in allcats %}<option value="{{ c.id }}" {{ 'selected' if p and p.category_id==c.id }}>{{ c.name }}</option>{% endfor %}</select></label>
+<label>Description<textarea name="description" rows="4">{{ p.description if p }}</textarea></label>
+<label>Main photo (JPG, PNG or WEBP, up to 12 MB){% if p and p.image %}<img src="{{ img_url(p.image) }}" width="80" alt="">{% endif %}<input type="file" name="image" accept="image/*"></label>
+<label>More photos<input type="file" name="extras" accept="image/*" multiple></label>
+{% if p %}{% for i in p.extras %}<label class="chk"><input type="checkbox" name="remove" value="{{ i }}"> Remove <img src="{{ img_url(i) }}" width="48" alt=""></label>{% endfor %}{% endif %}
+<label class="chk"><input type="checkbox" name="featured" {{ 'checked' if p and p.featured }}> Show on home page (featured)</label>
+<label class="chk"><input type="checkbox" name="active" {{ 'checked' if not p or p.active }}> Visible on website</label>
+<label class="chk"><input type="checkbox" name="demo" {{ 'checked' if p and p.demo }}> Demo product</label><button class="b gold">Save product</button></form>
+{% elif page=='categories' %}<h1 class="h2">Categories</h1>
+<form method="post" class="row">{{ T() }}<input type="hidden" name="action" value="add"><input name="name" placeholder="New category" required><button class="b gold">Add</button></form>
+{% for c in allcats %}<form method="post" class="row">{{ T() }}<input type="hidden" name="id" value="{{ c.id }}"><input name="name" value="{{ c.name }}"><label class="chk"><input type="checkbox" name="active" {{ 'checked' if c.active }}> Show</label>
+<button class="b ghost" name="action" value="edit">Save</button><button class="b ghost" name="action" value="delete" onclick="return confirm('Delete this category?')">Delete</button></form>{% endfor %}
+{% else %}<h1 class="h2">Website details</h1><form method="post" enctype="multipart/form-data" class="form">{{ T() }}
+<label>WhatsApp number (digits with country code, e.g. 919876543210)<input name="whatsapp" value="{{ s.whatsapp }}"></label><label>Phone<input name="phone" value="{{ s.phone }}"></label>
+<label>Instagram link<input name="instagram" value="{{ s.instagram }}"></label><label>Google Maps link<input name="maps" value="{{ s.maps }}"></label>
+<label>Shop address<textarea name="address" rows="2">{{ s.address }}</textarea></label><label>About text<textarea name="about" rows="6">{{ s.about }}</textarea></label>
+<label>Home banner photo{% if s.banner %}<img src="{{ img_url(s.banner) }}" width="80" alt="">{% endif %}<input type="file" name="banner" accept="image/*"></label>
+<label class="chk"><input type="checkbox" name="clear_banner"> Remove banner</label><button class="b gold">Save details</button></form>
+<form method="post" action="/admin/password" class="form"><h2>Change password</h2>{{ T() }}<label>Old password<input type="password" name="old"></label><label>New password (10+ characters)<input type="password" name="new"></label><button class="b ghost">Change password</button></form>
+{% endif %}{% endif %}</div></body></html>

@@ -1,0 +1,26 @@
+{% extends "base.html" %}{% block body %}
+<section class="hero"><div class="wrap hero-in">
+<div><h1>SHUBHDRA IMITATION JAWELLARY</h1><p class="tag1">Royal Rajasthani Jewellery. Wholesale Excellence.</p>
+<p class="lead">Discover premium Rajasthani and Rajwadi-style imitation jewellery crafted for retailers, resellers and bulk buyers.</p>
+<div class="btns"><a class="b gold" href="/collections">Explore Collection</a><a class="b ghost" href="#contact">Wholesale Enquiry</a></div></div>
+<div class="arch">{% if s.banner %}<img src="{{ img_url(s.banner) }}" alt="Rajwadi imitation jewellery by Shubhdra" width="480" height="640">{% else %}<span class="mono big">SI</span>{% endif %}</div>
+</div></section>
+<section class="sec" id="featured"><div class="wrap"><h2>Featured Collection</h2>
+<div class="grid">{% for p in feat %}{% include "_card.html" %}{% else %}<p>Featured products will appear here.</p>{% endfor %}</div>
+<p class="center"><a class="b gold" href="/collections">View Full Collection</a></p></div></section>
+<section class="sec alt" id="about"><div class="wrap narrow"><h2>About Us</h2><p>{{ s.about }}</p>
+<ul class="pts"><li>Wholesale supply</li><li>Traditional designs</li><li>Premium-looking imitation jewellery</li><li>Variety of collections</li><li>Retailer-friendly pricing</li><li>Bulk orders</li></ul></div></section>
+<section class="sec" id="wholesale"><div class="wrap narrow"><h2>Wholesale, Made Simple</h2>
+<p>We are wholesalers. There is no cart and no online payment. Browse the catalogue, choose your designs, then message or call us for wholesale rates and bulk orders.</p>
+<ol class="steps"><li>Browse the catalogue</li><li>Open a product</li><li>Enquire on WhatsApp or call</li><li>Confirm your wholesale order</li></ol></div></section>
+<section class="sec alt" id="visit"><div class="wrap narrow center"><h2>Visit Our Store</h2><p class="fbrand">SHUBHDRA IMITATION JAWELLARY</p>{% if s.address %}<p>{{ s.address }}</p>{% endif %}
+<a class="b gold" href="{{ s.maps }}" rel="noopener">Get Directions</a></div></section>
+<section class="sec" id="insta"><div class="wrap narrow center"><h2>Follow Our Latest Collections</h2><p>New designs reach our Instagram first.</p><a class="b ghost" href="{{ s.instagram }}" rel="noopener">Follow on Instagram</a></div></section>
+<section class="sec alt" id="contact"><div class="wrap narrow"><h2>Wholesale Enquiry</h2>
+{% for c, m in get_flashed_messages(with_categories=true) %}<p class="fl {{ c }}">{{ m }}</p>{% endfor %}
+<form method="post" action="/enquiry" class="form"><input type="hidden" name="csrf" value="{{ csrf() }}"><input class="hp" name="website" tabindex="-1" autocomplete="off">
+<label>Name<input name="name" required maxlength="100"></label><label>Phone Number<input name="phone" type="tel" required maxlength="20"></label>
+<label>Email<input name="email" type="email" maxlength="120"></label><label>Product / Product Code<input name="product" maxlength="150" value="{{ request.args.get('product','') }}"></label>
+<label>Message<textarea name="message" rows="4" maxlength="2000"></textarea></label><button class="b gold">Send Wholesale Enquiry</button></form>
+<div class="btns"><a class="b wa" href="https://wa.me/{{ s.whatsapp }}">WhatsApp</a><a class="b ghost" href="tel:{{ s.phone }}">Call Now</a><a class="b ghost" href="{{ s.instagram }}">Instagram</a><a class="b ghost" href="{{ s.maps }}">Google Maps</a></div></div></section>
+{% endblock %}

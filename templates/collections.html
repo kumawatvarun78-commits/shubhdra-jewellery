@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}Collections | Shubhdra Imitation Jawellary{% endblock %}{% block body %}
+<section class="sec"><div class="wrap"><h1 class="h2">Our Collection</h1>
+<form class="filters" method="get"><input type="search" name="q" value="{{ q }}" placeholder="Search by name or code" aria-label="Search">
+<select name="cat" aria-label="Category" onchange="this.form.submit()"><option value="">All categories</option>{% for c in cats %}<option value="{{ c.slug }}" {{ 'selected' if c.slug==cat }}>{{ c.name }}</option>{% endfor %}</select>
+<select name="sort" aria-label="Sort" onchange="this.form.submit()"><option value="new">Newest</option><option value="name" {{ 'selected' if sort=='name' }}>Name A-Z</option></select><button class="b gold">Search</button></form>
+<div class="grid">{% for p in products %}{% include "_card.html" %}{% else %}<p>No products found. Try another search or category.</p>{% endfor %}</div></div></section>{% endblock %}

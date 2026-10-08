@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block title %}{{ p.name }} | Shubhdra Imitation Jawellary{% endblock %}
+{% block desc %}{{ p.name }}: wholesale Rajasthani and Rajwadi imitation jewellery from Shubhdra Imitation Jawellary.{% endblock %}
+{% block body %}{% set msg = 'Hello Shubhdra Imitation Jawellary, I am interested in ' ~ p.name ~ ' (Product Code: ' ~ p.sku ~ '). Please share wholesale details.' %}
+<section class="sec"><div class="wrap pd">
+<div class="gal">{% if p.image %}<img id="main" src="{{ img_url(p.image) }}" alt="{{ p.name }}" width="600" height="750">{% else %}<span class="noimg">SI</span>{% endif %}
+{% if p.extras %}<div class="thumbs">{% for i in [p.image]+p.extras %}{% if i %}<img src="{{ img_url(i) }}" alt="{{ p.name }} view" loading="lazy" width="80" height="80" onclick="document.getElementById('main').src=this.src">{% endif %}{% endfor %}</div>{% endif %}</div>
+<div><p class="cat">{{ p.category.name if p.category else 'Collection' }}</p><h1 class="h2">{{ p.name }}</h1>
+<p>Product Code: <strong>{{ p.sku }}</strong></p>{% if p.demo %}<p class="fl err">Demo product for testing only.</p>{% endif %}
+<p class="pre">{{ p.description }}</p><p class="pr">Price: Contact for Wholesale Price</p>
+<div class="btns"><a class="b wa" href="https://wa.me/{{ s.whatsapp }}?text={{ msg|urlencode }}">Enquire on WhatsApp</a><a class="b gold" href="/?product={{ p.sku|urlencode }}#contact">Wholesale Enquiry</a></div>
+<p><a href="/collections">Back to collection</a></p></div></div></section>{% endblock %}

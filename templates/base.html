@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}Shubhdra Imitation Jawellary | Rajasthani Rajwadi Wholesale Jewellery{% endblock %}</title>
+<meta name="description" content="{% block desc %}Shubhdra Imitation Jawellary offers Rajasthani and Rajwadi-style imitation jewellery for wholesale buyers, retailers and resellers. Explore our traditional jewellery collections.{% endblock %}">
+<link rel="canonical" href="{{ site }}{{ request.path }}">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Shubhdra Imitation Jawellary">
+<meta property="og:title" content="Shubhdra Imitation Jawellary | Rajasthani Rajwadi Wholesale Jewellery">
+<meta property="og:description" content="Rajasthani and Rajwadi-style imitation jewellery for wholesale buyers, retailers and resellers.">
+<meta property="og:url" content="{{ site }}{{ request.path }}">
+{% if s.banner %}<meta property="og:image" content="{{ site }}{{ img_url(s.banner) }}">{% endif %}
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2315120f'/%3E%3Ctext x='32' y='43' font-size='30' text-anchor='middle' fill='%23c9a45c' font-family='Georgia'%3ESI%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Mulish:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"JewelryStore","name":"Shubhdra Imitation Jawellary","url":"{{ site }}","telephone":"{{ s.phone }}","sameAs":["{{ s.instagram }}"],"hasMap":"{{ s.maps }}","description":"Wholesale Rajasthani and Rajwadi imitation jewellery"}</script>
+</head><body>
+<header class="nav"><div class="wrap nav-in">
+<a class="logo" href="/" aria-label="Shubhdra Imitation Jawellary home"><span class="mono">SI</span><span class="lname">SHUBHDRA<br>IMITATION JAWELLARY</span></a>
+<button class="burger" aria-label="Menu" aria-expanded="false" onclick="document.body.classList.toggle('menu')"><i></i><i></i><i></i></button>
+<nav id="menu"><a href="/">Home</a><a href="/#about">About</a><a href="/collections">Collections</a><a href="/#wholesale">Wholesale</a><a href="/#contact">Contact</a></nav>
+</div></header>
+<main>{% block body %}{% endblock %}</main>
+<footer class="foot"><div class="wrap foot-in">
+<div><p class="fbrand">SHUBHDRA IMITATION JAWELLARY</p><p>Wholesale Rajasthani &amp; Rajwadi Imitation Jewellery</p></div>
+<div><h3>Quick Links</h3><a href="/">Home</a><a href="/#about">About</a><a href="/collections">Collections</a><a href="/#wholesale">Wholesale</a><a href="/#contact">Contact</a></div>
+<div><h3>Contact</h3><a href="https://wa.me/{{ s.whatsapp }}">WhatsApp</a><a href="tel:{{ s.phone }}">{{ s.phone }}</a><a href="{{ s.instagram }}" rel="noopener">Instagram</a><a href="{{ s.maps }}" rel="noopener">Google Maps</a></div>
+</div><p class="copy">© 2026 Shubhdra Imitation Jawellary. All Rights Reserved.</p></footer>
+<div class="dock"><a class="wa" href="https://wa.me/{{ s.whatsapp }}?text={{ 'Hello Shubhdra Imitation Jawellary, I would like wholesale details.'|urlencode }}">WhatsApp</a><a href="tel:{{ s.phone }}">Call Now</a></div>
+<script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</body></html>
